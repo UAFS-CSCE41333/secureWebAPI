@@ -5,7 +5,14 @@ const User = {
   async create(userData) {
     const { username, lastname, firstname, passwd, email, urole } = userData;
     const sql = `INSERT INTO users (username, lastname, firstname, passwd, email, urole) VALUES (?, ?, ?, ?, ?, ?)`;
-    const [result] = await db.execute(sql, [username, lastname, firstname, passwd, email, urole]);
+    const [result] = await db.execute(sql, [
+      username,
+      lastname,
+      firstname,
+      passwd,
+      email,
+      urole,
+    ]);
     return result.insertId;
   },
 
@@ -23,11 +30,26 @@ const User = {
     return rows[0] || null;
   },
 
+  // Read One by Username:
+  async findByUsername(username) {
+    const sql = `SELECT * FROM users WHERE username = ?`;
+    const [rows] = await db.execute(sql, [username]);
+    return rows[0] || null;
+  },
+
   // Update
   async update(id, userData) {
     const { username, lastname, firstname, passwd, email, urole } = userData;
     const sql = `UPDATE users SET username = ?, lastname = ?, firstname = ?, passwd = ?, email = ?, urole = ? WHERE userID = ?`;
-    const [result] = await db.execute(sql, [username, lastname, firstname, passwd, email, urole, id]);
+    const [result] = await db.execute(sql, [
+      username,
+      lastname,
+      firstname,
+      passwd,
+      email,
+      urole,
+      id,
+    ]);
     return result.affectedRows > 0;
   },
 

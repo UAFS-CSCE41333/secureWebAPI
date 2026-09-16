@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userModel");
+const { authenticateToken } = require("../middleware/auth");
+
+// Apply authentication middleware to all routes in this router
+router.use(authenticateToken);
 
 // Endpoint: GET /api/users - Find all users (READ)
 router.get("/", async function (req, res) {
@@ -30,7 +34,9 @@ router.post("/", async function (req, res) {
   try {
     const { username } = req.body;
     if (!username) {
-      return res.status(400).json({ success: false, error: 'Field "username" is required.' });
+      return res
+        .status(400)
+        .json({ success: false, error: 'Field "username" is required.' });
     }
 
     const insertId = await User.create(req.body);
@@ -47,7 +53,9 @@ router.put("/:id", async (req, res) => {
   try {
     const { username } = req.body;
     if (!username) {
-      return res.status(400).json({ success: false, error: 'Field "username" is required.' });
+      return res
+        .status(400)
+        .json({ success: false, error: 'Field "username" is required.' });
     }
     const updated = await User.update(req.params.id, req.body);
     if (!updated) {
@@ -67,7 +75,9 @@ router.delete("/:id", async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ success: false, error: "User not found" });
     }
-    res.status(200).json({ success: true, message: "User successfully deleted" });
+    res
+      .status(200)
+      .json({ success: true, message: "User successfully deleted" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
